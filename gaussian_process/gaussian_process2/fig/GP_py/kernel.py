@@ -3,17 +3,32 @@ import matplotlib.pyplot as plt
 
 plt.style.use("ggplot")
 
-def RBFkernel(x, x_prime, a, b):
-    return a * np.exp( - (x - x_prime)**2 / b )
+class RBFkernel(object):
+    def __init__(self, a, b):
+        self._a = a
+        self._b = b
+    def __call__(self,x, x_prime):
+        return self._a * np.exp( - (x - x_prime)**2 / self._b )
 
-def LinearKernel(x : np.ndarray, x_prime : np.ndarray):
-    return x.T * x_prime
+class LinearKernel(object):
+    def __init__(self):
+        pass
+    def __call__(self,x : np.ndarray, x_prime : np.ndarray):
+        return x.T * x_prime
 
-def ExpKernel(x : np.ndarray, x_prime : np.ndarray, b):
-    return np.exp( - np.abs(x - x_prime) / b)
+class ExpKernel(object):
+    def __init__(self, b):
+        self._b = b
+    def __call__(self, x : np.ndarray, x_prime : np.ndarray, b):
+        return np.exp( - np.abs(x - x_prime) / self._b)
 
-def PeriodicKernel(x : np.ndarray, x_prime : np.ndarray, a, b):
-    return np.exp(a * np.cos( np.abs(x - x_prime) / b))
+class PeriodicKernel(object):
+    def __init__(self,a, b):
+        self._a = a
+        self._b = b
+
+    def __call__(self,x : np.ndarray, x_prime : np.ndarray):
+        return np.exp(self._a * np.cos( np.abs(x - x_prime) / self._b))
 
 
 if __name__ == "__main__":
