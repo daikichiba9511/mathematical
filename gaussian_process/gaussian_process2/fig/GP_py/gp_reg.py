@@ -10,14 +10,14 @@ class GaussianProcess(object):
         self.mu = None
         self.var = None
 
-    def __size_check(self,x, y, z):
-        if len(x) == len(y) and len(x) == len(z):
+    def __size_check(self,x, y):
+        if len(x) == len(y):
             pass
         else:
             raise ValueError("data size is not same!")
 
     def naive_gpr(self, xtrain, ytrain, xtest):
-        self.__size_check(xtrain, ytrain, xtest)
+        self.__size_check(xtrain, ytrain)
 
         N = len(ytrain)
         M = len(xtest)
@@ -27,12 +27,13 @@ class GaussianProcess(object):
                 K[i][j] = self.__kernel(x=xtrain[i], x_prime=xtrain[j])
         K_inv = np.linalg.pinv(K)
         yy = K_inv * ytrain
-        k = [0.]*N
+        
         mu = [0.]*M
         var = [0.]*M
         for m in range(M):
+            k = [0.]*N
             for n in range(N):
-                k[n] = self.__kernel(xtrain[n], xtest[n])
+                k[n] = self.__kernel(xtrain[n], xtest[m])
             s = self.__kernel(xtest[m], xtest[m])
             mu[m] = k * yy
             var[m] = s - np.array(k) * K_inv * np.array(k).T
@@ -41,9 +42,10 @@ class GaussianProcess(object):
         return self
 
 
+
 def test_gpr():
     xtrain = np.random.rand(100)
-    xtest  = np.random.rand(100)
+    xtest  = np.random.rand(10)
     ytrain  = np.random.rand(100)
     k = kernel.LinearKernel()
     gpr = GaussianProcess(kernel=k)
