@@ -28,6 +28,9 @@ jupyterlab_code_formatter = "^1.3.4"
 autopep8 = "^1.5.3"
 black = "^19.10b0"
 jupyter-lsp = "^0.8.0"
+autoflake = "^1.4"
+flake8 = "^3.8.4"
+graphviz = "^0.14.2"
 
 [build-system]
 requires = ["poetry>=0.12"]
